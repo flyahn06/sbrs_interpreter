@@ -24,7 +24,13 @@ bo: 현재 스택의 값을 리턴하거나, 현재 스택을 가리킵니다.<b
 sa_bi_ru_sa, ju_sae_no_bo, kkal_kkal_kki_kkol_kkal 을 모두 임포트합니다.
 ```
 [sa_run_ahn_in_joe]
-sa sa sa sa ju ju bi
+sa
+sa
+sa
+sa
+ju
+ju
+bi
 
 sa = 3
 ju = 2
@@ -35,7 +41,8 @@ kkal [from] [to]: from 에서 to 로 값을 옮깁니다. from 에는 null 값�
 ```
 [sa_bi_ru_sa]
 [kkal_kkal_kki_kkol_kkal]
-kkal 84 saa ru
+kkal 84 saa
+ru
 
 saa = 84
 T
@@ -44,7 +51,11 @@ kki [from] [to]: to 의 값에 from 을 더한 값을 to 에 저장합니다. to
 ```
 [sa_bi_ru_sa]
 [kkal_kkal_kki_kkol_kkal]
-sa sa sa kki 92 saa ru
+sa
+sa
+sa
+kki 92 saa
+ru
 
 saa = 3+92 = 95
 _
