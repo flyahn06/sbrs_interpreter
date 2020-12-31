@@ -6,22 +6,22 @@
 ### sa_bi_ru_sa
 `[sa_bi_ru_sa]`
 
-sa: 스택의 값을 1 증가합니다.
-bi: 스택의 값을 1 감소합니다.
-ru: 스택의 값을 프린트합니다.
-saa: 현재 스택의 값을 리턴하거나, 현재 스택을 가리킵니다.
+sa: 스택의 값을 1 증가합니다. <br/>
+bi: 스택의 값을 1 감소합니다.<br/>
+ru: 스택의 값을 프린트합니다.<br/>
+saa: 현재 스택의 값을 리턴하거나, 현재 스택을 가리킵니다.<br/>
 
 ### ju_sae_no_bo
 `[ju_sae_no_bo]`
 
-ju: 스택의 값을 1 증가합니다.
-sae: 스택의 값을 1 감소합니다.
-no: 스택의 값을 프린트합니다.
-bo: 현재 스택의 값을 리턴하거나, 현재 스택을 가리킵니다.
+ju: 스택의 값을 1 증가합니다.<br/>
+sae: 스택의 값을 1 감소합니다.<br/>
+no: 스택의 값을 프린트합니다.<br/>
+bo: 현재 스택의 값을 리턴하거나, 현재 스택을 가리킵니다.<br/>
 
 ### sa_run_ahn_in_joe
 `[sa_run_ahn_in_joe]`
-sa_bi_ru_sa, ju_sae_no_bo, kkal_kkal_kki_kkol_kkal 을 모두임포트합니다.
+sa_bi_ru_sa, ju_sae_no_bo, kkal_kkal_kki_kkol_kkal 을 모두 임포트합니다.
 ```
 [sa_run_ahn_in_joe]
 sa sa sa sa ju ju bi
