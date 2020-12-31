@@ -10,5 +10,5 @@ def bi():
     saa -= 1
 
 def ru():
-    print(saa)
-    print(chr(saa))
+    global saa
+    print(chr(saa), end="")
