@@ -1,3 +1,4 @@
+commandset = ['ju', 'sae', 'no', 'bo']
 bo = 0
 
 def ju():

@@ -1,3 +1,4 @@
+commandset = ['sa', 'bi', 'ru', 'saa']
 saa = 0
 
 def sa():
