@@ -1,10 +1,17 @@
 import re
+import sys
+import importlib
+import os
 
-preorder_regex = re.compile("([)(?P<name>.*)(])")
+sys.path.append(os.getcwd())
+
+preorder_regex = re.compile(r"(\[)(?P<name>.*)(\])")
 command = "[sa_bi_ru_sa]"
-match = preorder_regex.search(command)
-print(match.group())
-exit()
+importer = {
+    "sa_bi_ru_sa": "stack_saa",
+    "ju_sae_no_bo": "stack_bot",
+    "kkal_kkal_kki_kkol_kkal": "utility_kkal"
+}
 
 class ImportException(BaseException):
     pass
@@ -41,10 +48,14 @@ def execute(file):
 
     for command in stack:
         if command.startswith("["):
-            print(preorder_regex.match(command))
-        
-        
-        
+            match = preorder_regex.match(command)
+            import_name = match.group('name')
+            preorder.append(import_name)
+        else:
+            # TODO: 명령은 나중에
+            pass
 
+    for utilities in preorder:
+        exec("import {}".format(importer[utilities]))
 
 execute("first.sbrs")
