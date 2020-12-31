@@ -33,6 +33,22 @@ def make_stack(rawfile):
 
     return prettify(raw_stack)
 
+def initializer(utilities: list) -> None:
+    global saa, bo, util_kkal
+
+    for utility in utilities:
+        try:
+            module_name = importer[utility]
+        except KeyError:
+            raise ImportError("{} is not defined.".format(utility))
+        else:
+            if module_name == "stack_saa":
+                saa = importlib.import_module(module_name)
+            elif module_name == "stack_bo":
+                bo = importlib.import_module(module_name)
+            elif module_name == "utility_kkal":
+                util_kkal = importlib.import_module(module_name)
+
 
 def execute(file):
     with open(file, 'r') as f:
@@ -54,8 +70,8 @@ def execute(file):
         else:
             # TODO: 명령은 나중에
             pass
+    
+    initializer(preorder)
 
-    for utilities in preorder:
-        exec("import {}".format(importer[utilities]))
 
 execute("first.sbrs")

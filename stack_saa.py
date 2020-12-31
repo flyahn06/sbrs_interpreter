@@ -9,4 +9,5 @@ def bi():
     saa -= 1
 
 def ru():
+    print(saa)
     print(chr(saa))
