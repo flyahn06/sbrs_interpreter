@@ -13,6 +13,7 @@ importer = {
     "kkal_kkal_kki_kkol_kkal": "utility_kkal"
 }
 imported_modules = []
+modules_dict = {}
 
 class ImportException(BaseException):
     pass
@@ -37,23 +38,15 @@ def make_stack(rawfile):
     return prettify(raw_stack)
 
 def initializer(utilities: list) -> None:
-    global stack_saa, stack_bo, utility_kkal, imported_modules
+    global modules_dict
 
     for utility in utilities:
         try:
-            module_name = importer[utility]
-        except KeyError:
+            module = importlib.import_module(utility)
+        except ModuleNotFoundError:
             raise ImportError("{} is not defined.".format(utility))
         else:
-            if module_name == "stack_saa":
-                stack_saa = importlib.import_module(module_name)
-                imported_modules.append(stack_saa)
-            elif module_name == "stack_bo":
-                stack_bo = importlib.import_module(module_name)
-                imported_modules.append(stack_bo)
-            elif module_name == "utility_kkal":
-                utility_kkal = importlib.import_module(module_name)
-                imported_modules.append(utility_kkal)
+            modules_dict[utility] = module
 
 def execute(file):
     with open(file, 'r') as f:
