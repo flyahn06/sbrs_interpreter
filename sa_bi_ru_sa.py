@@ -1,4 +1,10 @@
 commandset = ['sa', 'bi', 'ru', 'saa']
+commanddis = {
+    "sa": "callable",
+    "bi": "callable",
+    "ru": "callable",
+    "saa": "stack"
+}
 saa = 0
 
 def sa():

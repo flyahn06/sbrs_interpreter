@@ -1,3 +1,4 @@
+# from pprint import pprint as print
 import re
 import sys
 import importlib
@@ -16,11 +17,14 @@ parse_regex = re.compile(r"(?P<statement>[a-z]*) (?P<paramenter>.+)")
 modules_dict = {}
 
 # 없는 모듈이 임포트될 때 일어날 예외입니다.
-class ImportException(BaseException):
+class ImportException(Exception):
     pass
 
 # 정의되지 않은 명령이 생길 때 일어날 예외입니다.
-class UndefinedExecption(BaseException):
+class UndefinedExecption(Exception):
+    pass
+
+class NotStackException(Exception):
     pass
 
 # 빈 줄을 지우는 등 필요없는 요소들을 처리합니다.
@@ -89,6 +93,66 @@ def parse(stack: list) -> tuple:
 
     return preprocess, code
 
+def find_statement(modules_dict, statement):
+    for modulename, realmodule in modules_dict.items():
+        # print(modulename)
+        # print(realmodule.commandset)
+        # print(statement)
+        if statement in realmodule.commandset:
+            return realmodule
+            # print("command found in the external file {} that has been imported to main.".format(md))
+    else:
+        return None
+
+
+def make_token(code):
+    token_stack = []
+
+    for line in code:
+        md = None
+        statement = line[0]
+        if line[1]:
+            parameters = line[1]
+        else:
+            parameters = ()
+
+        md = find_statement(modules_dict, statement)
+        if not md:
+            raise UndefinedExecption("{} 은 찾을 수 없는 명령어입니다.".format(statement))
+
+        if parameters:
+            # 파라미터 있는 호출
+            temp_token = ["callgetval"]
+            temp_token.append(md)
+            temp_token.append(statement)
+            
+            temp_token_variable = {}
+            for parameter in parameters:
+                md = find_statement(modules_dict, parameter)
+            
+                if md:
+                    temp_token_variable[parameter] = md
+                    continue
+                
+                try:
+                    parameter = int(parameter)
+                except ValueError:
+                    raise UndefinedExecption("{} 은 찾을 수 없는 명령어입니다.".format(parameter))
+                else:
+                    temp_token_variable[parameter] = None
+            
+            temp_token.append(temp_token_variable)
+            token_stack.append(temp_token)
+        else:
+            temp_token = ["call"]
+            temp_token.append(md)
+            temp_token.append(statement)
+            token_stack.append(temp_token)
+
+    
+    return token_stack
+
+
 # 메인 실행 함수입니다. 파일이름은 str 형식으로 들어옵니다.
 # click 모듈을 이용하여 여러 옵션을 지정합니다.
 @click.command()
@@ -127,35 +191,15 @@ def execute(file: str, is_verbose: bool) -> None:
     # print("Initializing...")
     initializer(preprocess)
 
-    # 실제 코드 스택을 반전합니다.
-    # code.reverse()
-    # ("Reversed code stack.")
-
-    for line in code:
-        md = None
-        statement = line[0]
-        if line[1]:
-            parameter = line[1]
-        else:
-            parameter = ()
-
-        for modulename, realmodule in modules_dict.items():
-            # print(modulename)
-            # print(realmodule.commandset)
-            # print(statement)
-            if statement in realmodule.commandset:
-                md = realmodule
-                # print("command found in the external file {} that has been imported to main.".format(md))
-                break
-        else:
-            raise UndefinedExecption("{} 은 찾을 수 없는 명령어입니다.".format(statement))
-
-        if not parameter:
-            # print(f"module.{statement}()")
-            exec(f"module.{statement}()", {"module": md})
-        else:
-            # print(f"module.{statement}(*{parameter})")
-            exec(f"module.{statement}(*{parameter})", {"module": md})
+    token_stack = make_token(code)
+    
+    for token in token_stack:
+        if token[0] == 'call':
+            eval(f"module.{token[2]}()", {"module": token[1]})
+        elif token[0] == 'callgetval':
+            parameters = tuple(token[3].keys())
+            garbage = None
+            exec(f"garbage, module1.{parameters[1]} = module2.{token[2]}(*{parameters})", {"module1": token[3][parameters[1]], "module2": token[1]})
 
 
 execute()

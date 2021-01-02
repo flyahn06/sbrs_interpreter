@@ -1,4 +1,10 @@
 commandset = ['ju', 'sae', 'no', 'bo']
+commanddis = {
+    "ju": "callable",
+    "sae": "callable",
+    "no": "callable",
+    "bo": "stack"
+}
 bo = 0
 
 def ju():
@@ -10,4 +16,4 @@ def sae():
     bo -= 1
 
 def no():
-    print(chr(bo))
+    print(chr(bo), end="")
