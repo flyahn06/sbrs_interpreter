@@ -2,6 +2,7 @@ import re
 import sys
 import importlib
 import os
+import click
 
 # 현재 디랙터리에 있는 파일을 임포트하기 위함입니다.
 sys.path.append(os.getcwd())
@@ -50,7 +51,7 @@ def initializer(utilities: list) -> None:
         try:
             module = importlib.import_module(utility)
         except ModuleNotFoundError:
-            raise ImportError("{} is not defined.".format(utility))
+            raise ImportError("{} 모듈을 찾을 수 없습니다.".format(utility))
         else:
             # print("Appending module: key {} value {}.".format(utility, module))
             modules_dict[utility] = module
@@ -89,7 +90,24 @@ def parse(stack: list) -> tuple:
     return preprocess, code
 
 # 메인 실행 함수입니다. 파일이름은 str 형식으로 들어옵니다.
-def execute(file: str) -> None:
+# click 모듈을 이용하여 여러 옵션을 지정합니다.
+@click.command()
+@click.argument(
+    "file"
+)
+@click.option(
+    '-v', '--verbose',
+    'is_verbose',
+    help='인터프릿 과정을 보다 자세하게 출력합니다.\n실제 출력을 가릴 수 있어 사용이 권장되지 않습니다.',
+    is_flag = True
+)
+def execute(file: str, is_verbose: bool) -> None:
+    """\
+    FILE 를 실행합니다.
+
+    FILE 은 *.sbrs 파일이여야 합니다.
+    """
+
     # *.sbrs 사비루사어를 읽어들입니다.
     with open(file, 'r') as f:
         rawfile = f.read()
@@ -130,7 +148,7 @@ def execute(file: str) -> None:
                 # print("command found in the external file {} that has been imported to main.".format(md))
                 break
         else:
-            raise UndefinedExecption("Interpreter cannot find {}.".format(statement))
+            raise UndefinedExecption("{} 은 찾을 수 없는 명령어입니다.".format(statement))
 
         if not parameter:
             # print(f"module.{statement}()")
@@ -140,4 +158,4 @@ def execute(file: str) -> None:
             exec(f"module.{statement}(*{parameter})", {"module": md})
 
 
-execute("first.sbrs")
+execute()
